@@ -1,0 +1,17 @@
+{
+    "number of households diaries": 231,
+    "number of persons diaries": 462,
+    "subgroup_kwargs": {
+        "n_residents": 2,
+        "household_type": 2,
+        "hh_mean_age": [
+            70,
+            100
+        ],
+        "weekday": [
+            6,
+            7
+        ]
+    },
+    "date": "2021-01-07 20:20:56.212398"
+}

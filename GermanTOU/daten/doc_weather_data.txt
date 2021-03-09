@@ -1,0 +1,5 @@
+https://data.open-power-system-data.org/weather_data/
+utc_timestamp 	datetime (fmt:%Y-%m-%dT%H%M%SZ) 	Start of time period in Coordinated Universal Time
+DE_temperature 	number (float) 	temperature weather variable for DE in degrees C
+DE_radiation_direct_horizontal 	number (float) 	radiation_direct_horizontal weather variable for DE in W/m2
+DE_radiation_diffuse_horizontal 	number (float) 	radiation_diffuse_horizontal weather variable for DE in W/m2

@@ -1,0 +1,13 @@
+{
+    "number of households diaries": 109,
+    "number of persons diaries": 430,
+    "subgroup_kwargs": {
+        "n_residents": 4,
+        "quarter": 2,
+        "weekday": [
+            6,
+            7
+        ]
+    },
+    "date": "2020-12-16 10:39:49.267099"
+}

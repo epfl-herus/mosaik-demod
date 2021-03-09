@@ -1,0 +1,9 @@
+{
+    "number of households diaries": 91,
+    "number of persons diaries": 446,
+    "subgroup_kwargs": {
+        "n_residents": 5,
+        "quarter": 2
+    },
+    "date": "2021-01-06 22:47:41.301455"
+}
