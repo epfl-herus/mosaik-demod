@@ -1,0 +1,28 @@
+Low-order building thermal model parameters,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Building index,Proportion of dwellings of this building type,Description,Thermal transfer coefficient between outside air and external building thermal capacitance,Thermal transfer coefficient between external building thermal capacitance and internal building thermal capacitance,External building thermal capacitance,Internal building thermal capacitance,Global irradiance multiplier,"Ventilation rate, air changes per hour","Floor area, living space","Height, living space",Thermal transfer coefficient representing ventilation heat loss between outside air and internal building thermal capacitance,"Heat output from emitters require to maintain interior temperature of 20 degrees with external temperature of -2 degrees, no other gains",Nominal temperature of emitters,Heat transfer coefficient of heat emitters,Mass of water in heat emitters,Thermal capacitance of heat emitters,Nominal temperature of coolers,"Heat transfer coefficient of cool emitters to achieve interior temperature of 25 degrees with external 50, no other gains","Thermal capacitance of cool emitters, sized to cool from 25 deg to nominal cooler temperature in five minutes",,Database of Dwelling Types to Choose From,,,,,,,,,,,,
+,,,Hob,Hbi,Cb,Ci,As,N,Aliving,Lliving,Hv,?design,?em,Hem,mem,Cem,,Hem,,,UK,Urban India,,,,,,Rural India,,,,,
+,,,W/K,W/K,J/K,J/K,m2,h-1,m2,m,W/K,W,°C,W/K,kg,J/K,,W/K,,,Any Year,2006,2011,2016,2021,2026,2031,2006,2011,2016,2021,2026,2031
+1,0.125,Detached,437.5,370.6,22638446.4,1024813.8,4.2,1,136,4.2, 73.6 ,6034.58895989596,50,201.152965329865,84.4842454385434,354833.830841882,0,274.299498177089,16457.9698906253,Detached,17%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+2,0.125,Improved detached,128.7,272.2,24646439.6,917297.2,4.5,0.4,136,4.2, 74.4 ,3560.05098881218,50,118.668366293739,49.8407138433705,209330.998142156,0,161.820499491463,9709.22996948777,Improved detached,17%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+3,0.125,Semi-detached,247.6,298.9,12876155.4,409008.0,4.3,1,87,4.2, 46.7 ,4006.34328530937,50,133.544776176979,56.0888059943311,235572.985176191,0,182.106512968608,10926.3907781165,Semi-detached,17%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+4,0.125,Improved semi-detached,216.4,301.6,15647706.9,530743.8,5.5,0.4,87,4.2, 10.5 ,3001.88934360802,50,100.062978120267,42.0264508105123,176511.093404152,0,136.449515618547,8186.97093711279,Improved semi-detached,17%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+5,0.125,Terraced,197.3,239.9,11863842.6,467169.9,2.7,1,58,4.2, 10.4 ,2610.1728787702,50,87.0057626256732,36.5424203027827,153478.165271688,0,118.644221762282,7118.6533057369,Terraced,17%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+6,0.125,Improved terrace,144.7,205.2,13021834.3,492503.8,2.9,0.4,58,4.2, 10.4 ,2095.79698768747,50,69.8598995895823,29.3411578276246,123232.862876023,0,95.2634994403395,5715.80996642037,Improved terrace,17%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+7,0.125,Cement block appartment,504.2,504.2,31683711.0,1267348.4,1.5,1,71,2.4, 10.4 ,5775.17285560118,50,288.758642780059,80.8524199784166,339580.16390935,0,262.507857072781,15750.4714243669,Cement block appartment,0%,100%,100%,100%,100%,100%,100%,0%,0%,0%,0%,0%,0%
+8,0.125,Small brick-built house,351.5,351.5,15462039.0,618481.6,1.5,1,30,2.2, 10.4 ,4094.73056079195,50,204.736528039597,57.3262278510873,240770.156974566,0,186.124116399634,11167.446983978,Earth-brick house,0%,0%,0%,0%,0%,0%,0%,100%,100%,100%,100%,100%,100%
+,,,,,,,,,,,,,,,,,,,,Check total,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%
+Data for Indian Homes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Most data is copied across from the properties of homes in the Cambridge Housing Model,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+(Cambridge Architectural Research Limited and DECC),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Based on the English Housing Survey,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Specific housing types most similar to Indian homes were:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Appartment: Housing code 10556, a 71 square metre purpose-built flat built between 1967 and 1975 with single glazing, 'system-build' walls and no added insulation.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Small brick-built house: Housing code 2469, a 30 square meter bungalow built before 1900 with single glazing, solid brick walls and no added insulation",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Thermal resistance(heat transfer rate W/K) is split equally between the internal and external heat transfer coefficients of the model (each has 2X the total in  W/K),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Thermal capacitance is split between between external building and internal building: External building mass = value from Cambridge Housing Model. Internal = External / 25 to match other UK types.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+The 'global irradiance multiplier' is not known for Indian homes but was assumed to be approximately half that of the smallest type of house modelled for the UK.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Indian homes are either flats with vertical windows or have some shading over windows e.g. verandas / porches.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+The ventilation rate was unknown but assumed to be more similar to homes with single glazing and no added insulation.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Similarly, ventilation heat transfer coefficients were copied from terraced houses",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Ceiling heights were copied across from the Cambridge Housing Model,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Thermal capacitance of heat emitters are calculated in the same way as for the UK but those for cooling systems are smaller, to cool down within 1 minute.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

@@ -1,0 +1,90 @@
+,Appliance and water fixture model configuration,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Appliance category,Appliance type,,Proportion,Appliance demand configuration,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,of dwellings,,,,,,,,,,,,,,,,,,,Time appliance,Time appliance,Time when,Time when ,Average tme ,Probability of ,Overall average demand,Appliance,
+,,,,with,Associated,Average,Total number,Average number,Probability of ,Active occupancy,Active,Number of minutes,Probability of,,,,Delay start,,,,,Target number,spent running,spent in delayed,appliance is,appliance could,between switch,switch on event,per dwelling taking,mean,Heat gains ratio
+,,,,appliance,activity use,activity,of minutes,of minutes activity,activity occurring,dependent?,occupancy-dependent,in which appliance,activity occurring ,Mean cycle,Mean cycle ,Mean cycle,after cycle,Standby,Standby losses,Target demand,Target demand,of cycles,in period,restart mode,available to ,be switched on,on events,,ownership into,power,(for casual
+,,,Short name,,profile,probability,in period,performed in period,,,probability,can operate,given active,power,demand,length,has finished,Power,for period,for period,for cycles only,in period,,,switch on,due to activity occurring,,,account,factor,thermal gains)
+,,,,,,,(minutes/year),(minutes/year),,,multiplier,(min),occupancy,(W),(kWh),(min),(min),(W),,(kWh/y),(kWh/y),(cycles/y),(min),(min),(min),(min),(min),,(kWh/y),,
+,Cold,Chest freezer,CHEST_FREEZER,0.163,LEVEL,1.000,525600,525600,1.00,NO,1.00,525600,1.00,190,0.04433333333,14,56,0,0.000,271.132,271.132,6115.8,85620.6,342482.5,97497,97497,16,0.063,44,0.8,1
+,,Fridge freezer,FRIDGE_FREEZER,0.651,LEVEL,1.000,525600,525600,1.00,NO,1.00,525600,1.00,190,0.06966666667,22,44,0,0.000,426.065,426.065,6115.8,134546.7,269093.4,121960,121960,20,0.050,277,0.8,1
+,,Refrigerator,FRIDGE,0.430,LEVEL,1.000,525600,525600,1.00,NO,1.00,525600,1.00,110,0.033,18,36,0,0.000,201.820,201.820,6115.8,110083.7,220167.3,195349,195349,32,0.031,87,0.8,1
+,,Upright freezer,UPRIGHT_FREEZER,0.291,LEVEL,1.000,525600,525600,1.00,NO,1.00,525600,1.00,155,0.05166666667,20,40,0,0.000,315.981,315.981,6115.8,122315.2,244630.4,158654,158654,26,0.039,92,0.8,1
+,Consumer Electronics + ICT,Answer machine,ANSWER_MACHINE,0.900,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,0,0,0,0,1,8.760,8.760,0.000,0.0,0.0,0.0,248064,248064,0,1.000,8,1,1
+,,Cassette / CD Player,CD_PLAYER,0.900,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,15,0.015,60,0,2,17.520,33.286,15.766,1212.8,72765.8,0.0,175298,175298,145,0.007,30,1,1
+,,Clock,CLOCK,0.900,LEVEL,1.000,525600,525600,1.00,NO,1.00,525600,1.00,0,0,0,0,2,17.520,17.520,0.000,0.0,0.0,0.0,525600,525600,0,1.000,16,1,1
+,,Cordless telephone,PHONE,0.900,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,0,0,0,0,1,8.760,8.760,0.000,0.0,0.0,0.0,248064,248064,0,1.000,8,1,1
+,,Hi-Fi,HIFI,0.900,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,100,0.1,60,0,9,78.840,88.798,9.958,109.4,6565.5,0.0,241498,241498,2207,0.000,80,1,1
+,,Iron,IRON,0.900,ACT_IRON,0.008,525600,4423,0.01,YES,0.47,248064,0.02,1000,0.5,30,0,0,0.000,17.730,17.730,35.5,1063.8,0.0,247000,4404,124,0.008,16,1,1
+,,Vacuum,VACUUM,0.937,ACT_HOUSECLEAN,0.031,525600,16335,0.03,YES,0.47,248064,0.07,2000,0.6666666667,20,0,0,0.000,73.578,73.578,110.4,2207.4,0.0,245857,16190,147,0.007,69,1,0.7
+,,Fax,FAX,0.200,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,37,0.01911666667,31,0,3,26.280,29.743,3.463,197.1,6110.8,0.0,241953,241953,1227,0.001,6,0.9,1
+,,Personal computer,PC,0.708,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,141,0.7035,300,0,5,43.800,348.608,304.808,449.2,134771.4,0.0,113293,113293,252,0.004,247,0.9,1
+,,Printer,PRINTER,0.665,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,335,0.02234666667,4,0,4,35.040,49.500,14.460,654.9,2619.5,0.0,245445,245445,375,0.003,33,0.9,1
+,,TV 1,TV1,0.977,ACT_TV,0.151,525600,79119,0.15,YES,0.47,248064,0.32,124,0.1508666667,73,0,3,26.280,241.844,215.564,1464.3,106891.5,0.0,141173,45026,31,0.033,236,0.9,1
+,,TV 2,TV2,0.580,ACT_TV,0.151,525600,79119,0.15,YES,0.47,248064,0.32,124,0.1508666667,73,0,3,26.280,241.844,215.564,1464.3,106891.5,0.0,141173,45026,31,0.033,140,0.9,1
+,,TV 3,TV3,0.180,ACT_TV,0.151,525600,79119,0.15,YES,0.47,248064,0.32,124,0.1508666667,73,0,2,17.520,243.361,225.841,1521.5,111069.2,0.0,136995,43694,29,0.035,44,0.9,1
+,,VCR / DVD,VCR_DVD,0.896,ACT_TV,0.151,525600,79119,0.15,YES,0.47,248064,0.32,34,0.04082184011,73,0,2,17.520,73.731,56.211,1464.3,106891.5,0.0,141173,45026,31,0.033,66,1,1
+,,TV Receiver box,RECEIVER,0.934,ACT_TV,0.151,525600,79119,0.15,YES,0.47,248064,0.32,27,0.03263555322,73,0,15,131.400,152.464,21.064,1464.3,106891.5,0.0,141173,45026,31,0.033,142,1,1
+,Cooking,Hob,HOB,0.463,ACT_COOKING,0.067,525600,35336,0.07,YES,0.47,248064,0.14,2400,0.64,16,0,1,8.760,276.106,267.346,417.9,6686.4,0.0,241378,34384,82,0.012,128,1,0.3
+,,Oven,OVEN,0.616,ACT_COOKING,0.067,525600,35336,0.07,YES,0.47,248064,0.14,2125,0.95625,27,0,3,26.280,236.160,209.880,219.8,5934.4,0.0,242130,34491,157,0.006,145,1,0.6
+,,Microwave,MICROWAVE,0.859,ACT_COOKING,0.067,525600,35336,0.07,YES,0.47,248064,0.14,1250,0.625,30,0,2,17.520,76.562,59.042,94.6,2838.6,0.0,245225,34932,369,0.003,66,1,1
+,,Kettle,KETTLE,0.975,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,2000,0.1,3,0,1,8.760,160.666,151.906,1519.8,4559.5,0.0,243505,243505,160,0.006,157,1,1
+,,Small cooking (group),SMALL_COOKING,1.000,ACT_COOKING,0.067,525600,35336,0.07,YES,0.47,248064,0.14,1000,0.05,3,0,2,17.520,32.107,14.587,292.3,877.0,0.0,247187,35211,120,0.008,32,1,0.6
+,Wet,Dish washer,DISH_WASHER,0.335,ACT_COOKING,0.067,525600,35336,0.07,YES,0.47,248064,0.14,1131,1.130612245,60,0,0,0.000,273.016,273.016,241.5,14488.6,0.0,233575,33272,138,0.007,91,0.8,0.2
+,,Tumble dryer,TUMBLE_DRYER,0.416,ACT_LAUNDRY,0.008,525600,4331,0.01,YES,0.47,248064,0.02,2500,2.5,60,0,1,8.760,313.820,305.060,122.1,7324.4,0.0,240740,4203,34,0.029,131,0.8,0.2
+,,Washing machine,WASHING_MACHINE,0.781,ACT_LAUNDRY,0.008,525600,4331,0.01,YES,0.47,248064,0.02,406,0.93275,138,0,1,8.760,191.041,182.281,195.9,27035.1,0.0,221029,3859,20,0.051,149,0.8,0.2
+,,Washer dryer,WASHER_DRYER,0.153,ACT_LAUNDRY,0.008,525600,4331,0.01,YES,0.47,248064,0.02,792,2.613714794,198,0,1,8.760,520.157,511.397,195.9,38789.5,0.0,209275,3654,19,0.054,80,0.8,0.2
+,Water heating,DESWH,DESWH,0.170,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,3000,1,20,0,0,0.000,2684.997,2684.997,2685.0,53699.9,0.0,194364,194364,72,0.014,456,1,0.1
+,,E-INST,E_INST,0.010,ACTIVE_OCC,0.472,525600,248064,0.47,YES,0.47,248064,1.00,3000,0.25,5,0,0,0.000,1802.158,1802.158,7208.6,36043.2,0.0,212021,212021,29,0.034,18,1,0.1
+,,Electric shower,ELEC_SHOWER,0.670,ACT_WASHDRESS,0.060,525600,31339,0.06,YES,0.47,248064,0.13,9000,0.45,3,0,0,0.000,130.678,130.678,290.4,871.2,0.0,247193,31229,108,0.009,88,1,0.1
+,,,,,Water fixture configuration,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,Proportion,,,,,,,,,,,,,,,,,,,Time fixture,Time fixture,Time when,Time when ,Average tme ,Probability of ,Overall average demand,,
+,,,,of dwellings,Associated,Average,Total number,Average number,Probability of ,Active occupancy,Active,Number of minutes,Probability of,,,,Delay start,,,,,Target number,spent running,spent in delayed,fixture is,fixture could,between switch,switch on event,per dwelling taking,,
+,,,,with,activity use,activity,of minutes,of minutes activity,activity occurring,dependent?,occupancy-dependent,in which fixture,activity occurring ,Mean cycle,Mean cycle,Mean cycle ,after cycle,Standing loss,Standing loss,Target demand,Target demand,of cycles,in period,restart mode,available to ,be switched on,on events,,ownership into,,
+,,Water fixture type,Short name,appliance,profile,probability,in period,performed in period,,,probability,can operate,given active,flow rate,flow volume,duration,has finished,flow rate,volume for period,for period,for cycles only,in period,,,switch on,due to activity occurring,,,account,,
+,,,,,,,(minutes/day),(minutes/day),,,multiplier,(min),occupancy,(litres/min),(litre),(min),(min),(litres/min),(litres),(litres/day),(litres/day),(cycles/day),(min),(min),(min),(min),(min),,(litres/day),,
+,,Basin,BASIN,0.994,ACT_WASHDRESS,0.060,1440,86,0.06,YES,0.47,680,0.13,3.54,2.3,0.65,0,0.00,0,22,22,9.6,6.2,0.0,673,85,9,0.112,22,,
+,,Sink,SINK,1.000,ACT_COOKING,0.067,1440,97,0.07,YES,0.47,680,0.14,3.54,2.3,0.65,0,0.00,0,31,31,13.5,8.8,0.0,671,96,7,0.141,31,,
+,,Shower,SHOWER,0.997,ACT_WASHDRESS,0.060,1440,86,0.06,YES,0.47,680,0.13,9.26,25.7,2.78,0,0.00,0,32,32,1.2,3.5,0.0,676,85,69,0.015,32,,
+,,Bath,BATH,0.916,ACT_WASHDRESS,0.060,1440,86,0.06,YES,0.47,680,0.13,9.26,73.3,7.92,20,0.00,0,38,38,0.5,4.1,10.4,665,84,162,0.006,35,,
+,Lighting,Lighting,,1,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,TOTALS,Lighting,715,kWh/year,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Appliances,3182,kWh/year,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Hot water,120,litres/day,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Data and information references: note that the energy related numbers assumed for this model are based upon input or derived from the following sources:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+1,"UK Market Transformation Programme, Department for Environment, Food and Rural Affairs, Smith Square, London, UK, http://www.mtprog.com/.  Crown Copyright.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BN DW Shower: Actions to improve shower desidn and efficiency - Briefing Note relating to policy scenario objectives in Policy Brief (Version 2.0), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNXS30: Vacuum cleaners - UK market, technologies, energy use, test methods and waste (Version 1.7), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNW06: Assumptions underlying the energy projections for domestic tumble dryers (Version 3.1), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNCK07: Comparing energy use in microwave ovens with traditional electric fuelled methods (Version 1.1), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNCK06: Trends in kettle type and usage and possible impact on energy consumption (Version 2.1), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNXS36: Estimated UK standby electricity consumption in 2006 (Version 2.2), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"Policy brief: Improving the energy performance of domestic cold appliance, 2008",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNW07: Assumptions underlying the energy projections for domestic dishwashers (Version 3.1), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNWAT24: Performance and efficiency: reviewing and defining showers (Version 1.0), 2008",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNW05: Assumptions underlying the energy projections for domestic washing machines (Version 3.1), 2006",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNTV01: Televisions: Future Stock and Energy Trends (Version 3.1), 2005",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"BNDA3: Digital TV adapters in the UK - rationale/assumptions for projecting future energy consumption (Version 1.1), 2005",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"Policy brief: Improving the energy performance of consumer electronics products, 2008",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"Policy brief: Improving the energy performance of information and communication technology products, 2008",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2,"  UK Department of Energy and Climate Change, Energy Consumption in the UK, Domestic data tables, A National Statistics Publication. ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,"Energy consumption in the UK, Domestic Energy Consumption in the UK",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,http://www.decc.gov.uk/en/content/cms/statistics/publications/ecuk/ecuk.aspx,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Table 3.6: Domestic energy consumption by end use,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Table 3.7: Domestic energy consumption by end use and fuel,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Table 3.10: Total electricity consumption by household domestic appliances,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Table 3.12: Percentage of households owning domestic appliances,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Table 3.14: Households with central heating by type in Great Britain,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+3," T. Fawcett, K. Lane, B. Boardman, et al., Lower Carbon Futures for European Households, Environmental Change Institute (ECI), University of Oxford, UK. 2000",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+4," 40% House, B. Boardman et al., Environmental Change Institute, University of Oxford, 2005.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+5,"Office for National Statistics, Social Trends No. 37 (2007 Edition), Table 2.1 Households by Size, Crown Copyright 2007",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+6,"UK Ofcom, Southwark Bridge Road, London, http://www.ofcom.org.uk/research/. ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+7,"The Energy Saving Trust, Domestic heating by electricity (2006 edition), CE185, 2006.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+8,"J. Paatero, P. Lund, A model for generating household electricity load profiles, International Journal of Energy Research 30 (5) (2006) 273–290.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+9,"M. Newborough, p. Augood, Demand-side management opportunities for the UK domestic sector, IEE Proceedings - Generation, Transmission and Distribution, Vol. 146, No. 3, May 1999",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+10,"G. Wood, M. Newborough, Dynamic energy-consumption indicators for domestic appliances: environment, behaviour and design, Energy and Buildings, Volume 35, Issue 8, September 2003, Pages 821-841, ISSN 0378-7788, DOI: 10.1016/S0378-7788(02)00241-4.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+11,"Clarke, A., Grant, N., Thornton, J., 2009 Quantifying the energy and carbon effects of water saving: Final Report for the Environment Agency and Energy Saving Trust. ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

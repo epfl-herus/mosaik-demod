@@ -1,0 +1,7 @@
+Heating system model parameters,,,,,,,,,,,,,
+Primary heating system index,Proportion of dwellings with this heating system,Type of heating unit,Type of system,Type of fuel,Fuel flow rate (nominal),Calorific value of fuel,Calorific value of fuel flow rate,Thermal efficiency,Heat output of unit,Standby power,Pump power,DHW cylinder volume,DHW Tank Heat Loss
+,,,"1 = regular, 2 = combi",,mfuel,,,?h,?h,Pstandby,Ppump,Vcyl,Hloss
+,,,,,m3/h,MJ/m3,W,%,W,W,W,ltr,WK-1
+1,100%,Boiler (regular),1,Mains gas,2.61,40,29000,75%,21750,10,20,125,2.8
+2,0%,Boiler (combi),2,Mains gas,2.61,40,29000,75%,21750,10,20,5,2.8
+3,0%,Boiler (system),1,Mains gas,1.64,40,18222.2222222222,75%,13666.6666666667,10,20,125,2.8
