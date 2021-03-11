@@ -12,8 +12,8 @@ sim_config = {
         'cmd': 'mosaik-hdf5 %(addr)s',
     },
     'HouseholdSim': {
-        #'python': 'simulator_mosaik:LoadSimulator',
-        'cmd': 'python simulator_mosaik.py %(addr)s',
+        'python': 'simulator_mosaik:LoadSimulator',
+        #'cmd': 'python simulator_mosaik.py %(addr)s',
     },
     'PyPower': {
         'python': 'mosaik_pypower.mosaik:PyPower',
@@ -25,7 +25,7 @@ sim_config = {
 }
 
 START = '2014-01-01 00:00:00'
-END = 31 * 24 * 3600  # 1 day
+END = 31 * 24 * 3600  # 1 mounth
 PV_DATA = 'data/pv_10kw.csv'
 PROFILE_FILE = 'data/profiles.data.gz'
 GRID_NAME = 'demo_lv_grid'
@@ -122,19 +122,9 @@ def create_scenario(world):
     })
 
 
-def connect_buildings_to_grid(world, houses, grid):
-    buses = filter(lambda e: e.type == 'PQBus', grid)
-    buses = {b.eid.split('-')[1]: b for b in buses}
-    #house_data = world.get_data(houses, 'node_id')
-    for house in houses:
-        # node_id = house_data[house]['node_id']
-        # print(buses.keys())
-        #dict_keys(['node_a1', 'node_a2', 'node_a3', 'node_b1', 'node_b10', 'node_b2', 'node_b3', 'node_b4', 'node_b5', 'node_b6', 'node_b7', 'node_b8', 'node_b9', 'node_c1', 'node_c10', 'node_c11', 'node_c12', 'node_c2', 'node_c3', 'node_c4', 'node_c5', 'node_c6', 'node_c7', 'node_c8', 'node_c9', 'node_d1', 'node_d10', 'node_d11', 'node_d12', 'node_d2', 'node_d3', 'node_d4', 'node_d5', 'node_d6', 'node_d7', 'node_d8', 'node_d9', 'tr_sec'])
-        #node_b7  on bus  Entity('PyPower-0', '0-node_b7', 'PyPower', PQBus) 
-        
-        #print(node_id,' on bus ', buses[node_id] )
-        world.connect(house, buses['node_a1'], ('P_out', 'P'))
-
+def connect_heating_system_to_households(world, heating_system, houses):
+    # define connexion between the heat pumps and the houses
+    raise NotImplementedError()
 
 
 if __name__ == '__main__':

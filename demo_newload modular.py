@@ -14,16 +14,16 @@ sim_config = {
         'cmd': 'mosaik-hdf5 %(addr)s',
     },
     'ActivitySimulator': {
-        'python': 'simulator_mosaik_household:ActivitySimulator',
+        'python': 'simulator_mosaik_modular:ActivitySimulator',
     },
     'ApplianceSimulator':{
-        'python': 'simulator_mosaik_household:AppliancesSimulator',
+        'python': 'simulator_mosaik_modular:AppliancesSimulator',
     },
     'LightingSimulator':{
-        'python': 'simulator_mosaik_household:LightingSimulator',
+        'python': 'simulator_mosaik_modular:LightingSimulator',
     },
     'IrradianceSimulator':{
-        'python': 'simulator_mosaik_household:IrradianceSimulator',
+        'python': 'simulator_mosaik_modular:IrradianceSimulator',
     },
     'PyPower': {
         'python': 'mosaik_pypower.mosaik:PyPower',

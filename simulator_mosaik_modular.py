@@ -5,7 +5,7 @@ Mosaik interface for the example simulator.
 from logging import warning
 import mosaik_api
 
-import simulator
+
 import numpy as np
 
 import sys
