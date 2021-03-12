@@ -3,12 +3,12 @@ Mosaik interface for the example simulator.
 
 """
 from datetime import datetime
+import numpy as np
+import arrow
 import mosaik_api
 
-
-import sys
-
 # need to specify the path of the simulator package
+import sys
 sys.path += ['C:\\Users\\Lio\\Documents\\Activity-based-demand-modelling']
 import simulators
 
@@ -40,6 +40,7 @@ META = {
                 'num_res',              # Number of residents in the household
                 'subgroup',             # A string determining the social subgroup simulated in the household
                 'external_heat_input',  # Heat received from an external heating system [W]
+                'heating_system_T',     # The temperature of the water input from an external heating system
             ],
         },
     },
@@ -59,14 +60,19 @@ class LoadSimulator(mosaik_api.Simulator):
         'SH':       'get_target_space_heating', 
         'DHW':      'get_DHW_demand',       
         'num_res':  'get_n_res',
-        'subgroup': 'get_subgroup_dict',
-        
+        'subgroup': 'get_subgroup_dict',    
+    }
+    # Dictionary converting the inputs to load model step function
+    step_inputs_dict = {
+        'outside_temperature': 'external_outside_temperature',
+        'external_heat_input': 'external_heat_outputs',
     }
     def __init__(self):
         super().__init__(META)
         self.simulators = []  # Storage of the load simulators
         self.eid_prefix = 'LoadModel_'
         self.entities = {}  # Maps EIDs to load simulators indices in self.simulator
+        self.children = {}  # Maps EIDs to simulators and corresponding household in self.simulator
 
     def init(self, sid, eid_prefix=None):
         """Initialize a Mosaik Load Simulator.
@@ -76,7 +82,9 @@ class LoadSimulator(mosaik_api.Simulator):
             self.eid_prefix = eid_prefix
         return self.meta
 
-    def create(self, num, model, sim_start, input_excell_file_path, number_households=None):
+    def create(
+        self, num, model, sim_start,
+        input_excell_file_path, number_households=None, date_format='YYYY-MM-DD HH:mm:ss'):
         """Creates a group of households. Each household can be individually accessed using
         the children property of the HouseholdGroup.
 
@@ -102,7 +110,8 @@ class LoadSimulator(mosaik_api.Simulator):
 
         # Parse the date
         # TODO: check if there is a better way of getting the date.
-        start_datetime = datetime.strptime(sim_start)
+        arrow_sim_start = arrow.get(sim_start, date_format)
+        start_datetime = arrow_sim_start.datetime
 
         # Creates the load simulator corresponding to the  HouseholdsGroup entity
         if model == 'HouseholdsGroup':
@@ -129,19 +138,62 @@ class LoadSimulator(mosaik_api.Simulator):
         self.entities[entity['eid']] = next_eid
         # Creates a mapping for the entitiy ID to their corresponding load simulator and their position in it
         for i, child in enumerate(entity['children']):
-            self.entities[child['eid']] = (next_eid, i) 
+            self.children[child['eid']] = (next_eid, i) 
 
         return [entity]
 
     def step(self, time, inputs=None):
-        # Assume time is in seconds
 
-        # TODO: get any necessary input and give them to the load simulator
+        # Perform simple simulation step
+        if inputs is None:
+            [sim.step() for sim in self.simulators]
 
-        # Perform simulation step
-        [sim.step() for sim in self.simulators]
+        else:
+            # must reconstruct vectorized inputs for each group of households
+            # creates the arrays from the inputs
+            inputs_dic = self.step_inputs_dict
+            inputs_names = list(inputs_dic.values())
 
-        return time + 60  # Step size is 1 minute
+            # creates a dictionary with the inputs for each load simulator
+            inputs_list = [
+                {} for s in self.simulators]
+            #inputs_list = [
+            #    {n: np.nan*np.empty(shape=s.n_households) for n in inputs_names}
+            #    for s in self.simulators]
+
+            # remove from inputs_list the attr not specified in inputs
+
+
+            for eid, attrs in inputs.items():
+                for name, values in attrs.items():
+                    # values are list for the whole household, use them directly
+                    if len(values) > 1:
+                        raise ValueError('An HouseholdsGroup can recieve the same attribute only from a single group as input. Received ' + str(values))
+                    elif len(values) < 1:
+                        raise ValueError('No data received for ' + name)
+                    else: # only a single input source
+                        val = list(values.values())[0] # extract the single value from values dict
+                        # split whether the entity is group of household
+                        if eid in self.entities:  # householdgroup => list or int input
+                            sim_id = self.entities[eid]
+                            inputs_list[sim_id][inputs_dic[name]] = np.array(val)
+                        elif eid in self.children:  # household => reconstruct the arrays
+                            sim_id, hh_id = self.children[eid]
+                            if not (inputs_dic[name] in inputs_list[sim_id]):
+                                # assign the array
+                                inputs_list[sim_id][inputs_dic[name]] = np.empty(self.simulators[sim_id].n_households)
+                            inputs_list[sim_id][inputs_dic[name]][hh_id] = val
+                        else:
+                            raise ValueError('%s not registered in %s' % (eid, str(self)))
+            
+            # unpacks the inputs for the simulators step function
+            #print(inputs)
+            #print(inputs_list)
+            #print(type(inputs_list))
+            [sim.step(**i) for sim, i in zip(self.simulators, inputs_list)]  
+
+
+        return time + 60  # Step size is 1 minute, assume time is in seconds
 
     def get_data(self, outputs):
         """ get_data method for mosaik.
@@ -171,6 +223,8 @@ class LoadSimulator(mosaik_api.Simulator):
                 elif attr in self._attr_to_getter: # check if the attribute has a corresponding getter method             
                     method = getattr(self.simulators[sim_id], self._attr_to_getter[attr])
                     out = method(hh_id)
+                elif attr == 'heating_system_T':  # id number
+                    raise NotImplementedError('Must choose a temperature.')
                 elif attr == 'num':  # id number
                     out = int(eid[10:])  # remove the beggining of the str
                 elif attr == 'external_heat_input':
@@ -180,7 +234,7 @@ class LoadSimulator(mosaik_api.Simulator):
                     raise NotImplementedError('No implementation corresponds to output attribute: %s' % attr)
                 # Set the value to the out data
                 data[eid][attr] = out
-                
+
         return data
 
 

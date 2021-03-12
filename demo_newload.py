@@ -26,6 +26,8 @@ sim_config = {
 
 START = '2014-01-01 00:00:00'
 END = 31 * 24 * 3600  # 1 mounth
+
+WEATHER_DATA = 'data/weather_data.csv'
 PV_DATA = 'data/pv_10kw.csv'
 PROFILE_FILE = 'data/profiles.data.gz'
 GRID_NAME = 'demo_lv_grid'
@@ -45,14 +47,22 @@ def create_scenario(world):
     pypower = world.start('PyPower', step_size=15*60)
     hhsim = world.start('HouseholdSim')
     pvsim = world.start('CSV', sim_start=START, datafile=PV_DATA)
+    START_WEATHER_FORMAT = ''.join((START[:10], 'T', START[11:19], 'Z'))
+    weathersim = world.start('CSV', sim_start=START_WEATHER_FORMAT, datafile=WEATHER_DATA, date_format='YYYY-MM-DDTHH:mm:ssZ')
+
 
     # Instantiate models
     grid = pypower.Grid(gridfile=GRID_FILE).children
-    houses = hhsim.HouseholdsGroup(
+    household_group= hhsim.HouseholdsGroup(
         sim_start=START,
         input_excell_file_path='inputs.xlsx',
-        number_households=40).children
+        number_households=40)
+    houses = household_group.children
+    temperature = weathersim.Weather()
+    world.connect(temperature, household_group, ('DE_temperature', 'outside_temperature'))
+
     pvs = pvsim.PV.create(20)
+
 
     # Connect entities
     connect_randomly(world, houses, [e for e in grid if 'node' in e.eid], ('P_out', 'P') )
@@ -76,6 +86,18 @@ def create_scenario(world):
     webvis.set_config(ignore_types=['Topology', 'HouseholdsGroup', 'Grid',
                                     'Database'])
     vis_topo = webvis.Topology()
+
+    world.connect( temperature, vis_topo, 'DE_temperature')
+    webvis.set_etypes({
+        'Weather': {
+            'cls': 'temp',
+            'attr': 'DE_temperature',
+            'unit': 'T [C]',
+            'default': -20,
+            'min': -20,
+            'max': 40,
+        },
+    })
 
     connect_many_to_one(world, nodes, vis_topo, 'P', 'Vm')
     webvis.set_etypes({
