@@ -16,3 +16,4 @@ venv/
 /mosaik
 __pycache__/
 .vscode/
+desktop.ini
