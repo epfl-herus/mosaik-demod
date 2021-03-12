@@ -15,16 +15,16 @@ SIM_CONFIG = {
         'cmd': '%(python)s simulator_mosaik.py %(addr)s'
     },
     'ActivitySimulator': {
-        'python': 'simulator_mosaik_household:ActivitySimulator',
+        'python': 'simulator_mosaik_modular:ActivitySimulator',
     },
     'ApplianceSimulator':{
-        'python': 'simulator_mosaik_household:AppliancesSimulator',
+        'python': 'simulator_mosaik_modular:AppliancesSimulator',
     },
     'LightingSimulator':{
-        'python': 'simulator_mosaik_household:LightingSimulator',
+        'python': 'simulator_mosaik_modular:LightingSimulator',
     },
     'IrradianceSimulator':{
-        'python': 'simulator_mosaik_household:IrradianceSimulator',
+        'python': 'simulator_mosaik_modular:IrradianceSimulator',
     },
 }
 END = 1 * 60 * 60  # 1 = 1 second
@@ -45,8 +45,8 @@ irradiance_sim = world.start('IrradianceSimulator')
 
 n_households = 50
 
-model = examplesim.HouseholdsGroup( input_excell_file_path='inputs.xlsx', sim_start=0)
-model2 = load_sim.HouseholdsGroup(input_excell_file_path='inputs.xlsx', sim_start=0)
+model = examplesim.HouseholdsGroup(input_excell_file_path='inputs.xlsx', sim_start='2010-01-01 00:00:00')
+model2 = load_sim.HouseholdsGroup(input_excell_file_path='inputs.xlsx', sim_start='2009-01-01 00:00:00')
 
 monitor = collector.Monitor()
 
