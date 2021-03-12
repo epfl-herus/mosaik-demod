@@ -13,3 +13,6 @@ htmlcov/*
 venv/
 /demo.hdf5
 /data/profiles.data
+/mosaik
+__pycache__/
+.vscode/
