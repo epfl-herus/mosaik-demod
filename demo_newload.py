@@ -25,7 +25,7 @@ sim_config = {
 }
 
 START = '2014-01-01 00:00:00'
-END = 31 * 24 * 3600  # 1 mounth
+END =  12 * 31 * 24 * 3600  # 1 year
 
 WEATHER_DATA = 'data/weather_data.csv'
 PV_DATA = 'data/pv_10kw.csv'
@@ -48,16 +48,17 @@ def create_scenario(world):
     hhsim = world.start('HouseholdSim')
     pvsim = world.start('CSV', sim_start=START, datafile=PV_DATA)
     START_WEATHER_FORMAT = ''.join((START[:10], 'T', START[11:19], 'Z'))
-    weathersim = world.start('CSV', sim_start=START_WEATHER_FORMAT, datafile=WEATHER_DATA, date_format='YYYY-MM-DDTHH:mm:ssZ')
 
 
     # Instantiate models
     grid = pypower.Grid(gridfile=GRID_FILE).children
     household_group= hhsim.HouseholdsGroup(
         sim_start=START,
-        input_excell_file_path='inputs.xlsx',
-        number_households=40)
+        number_households=40,
+    )
     houses = household_group.children
+
+    weathersim = world.start('CSV', sim_start=START_WEATHER_FORMAT, datafile=WEATHER_DATA, date_format='YYYY-MM-DDTHH:mm:ssZ')
     temperature = weathersim.Weather()
     world.connect(temperature, household_group, ('DE_temperature', 'outside_temperature'))
 
