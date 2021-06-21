@@ -6,9 +6,6 @@ import numpy as np
 import arrow
 import mosaik_api
 
-# need to specify the path of the simulator package
-import sys
-sys.path += ['C:\\Users\\Lio\\Documents\\Activity-based-demand-modelling']
 from demod import simulators
 from demod.datasets.Germany.loader import GermanDataHerus
 
