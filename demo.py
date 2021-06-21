@@ -1,7 +1,9 @@
 import random
+import datetime
 
 from mosaik.util import connect_randomly, connect_many_to_one
 import mosaik
+
 
 
 sim_config = {
@@ -11,9 +13,17 @@ sim_config = {
     'DB': {
         'cmd': 'mosaik-hdf5 %(addr)s',
     },
-    'HouseholdSim': {
-        'python': 'householdsim.mosaik:HouseholdSim',
-        # 'cmd': 'mosaik-householdsim %(addr)s',
+    'OccupancySimulator': {
+        'python': 'simulator_mosaik_modular:OccupancySimulator',
+    },
+    'ApplianceSimulator':{
+        'python': 'simulator_mosaik_modular:AppliancesSimulator',
+    },
+    'LightingSimulator':{
+        'python': 'simulator_mosaik_modular:LightingSimulator',
+    },
+    'IrradianceSimulator':{
+        'python': 'simulator_mosaik_modular:IrradianceSimulator',
     },
     'PyPower': {
         'python': 'mosaik_pypower.mosaik:PyPower',
@@ -25,6 +35,7 @@ sim_config = {
 }
 
 START = '2014-01-01 00:00:00'
+START_DATETIME = datetime.datetime.strptime(START, "%Y-%m-%d %H:%M:%S")
 END = 31 * 24 * 3600  # 1 day
 PV_DATA = 'data/pv_10kw.csv'
 PROFILE_FILE = 'data/profiles.data.gz'
@@ -43,24 +54,48 @@ def main():
 def create_scenario(world):
     # Start simulators
     pypower = world.start('PyPower', step_size=15*60)
-    hhsim = world.start('HouseholdSim')
+
+    appsim = world.start('ApplianceSimulator')
+    lightsim = world.start('LightingSimulator')
+    irrsim = world.start('IrradianceSimulator')
+    actsim = world.start('OccupancySimulator')
+
     pvsim = world.start('CSV', sim_start=START, datafile=PV_DATA)
 
+    n_households = 40
     # Instantiate models
     grid = pypower.Grid(gridfile=GRID_FILE).children
-    houses = hhsim.ResidentialLoads(sim_start=START,
-                                    profile_file=PROFILE_FILE,
-                                    grid_name=GRID_NAME).children
+    activity = actsim.HouseholdsGroupActivity(
+        inputs_params={
+            'n_households': n_households,
+            'start_datetime': START_DATETIME
+        }
+    )
+    appliances = appsim.HouseholdsGroupAppliances(
+        inputs_params={
+            'subgroup_list': [{'n_residents': 2}],
+            'n_households_list': [n_households],
+            'start_datetime': START_DATETIME
+        }
+    )
+    ligthing = lightsim.HouseholdsGroupLighting(inputs_params={'n_households': n_households,})
+    irradiance = irrsim.Irradiance(
+        inputs_params={
+            'start_datetime': START_DATETIME,
+        }
+    )
     pvs = pvsim.PV.create(20)
 
     # Connect entities
-    connect_buildings_to_grid(world, houses, grid)
+    connect_randomly(world, appliances.children, [e for e in grid if 'node' in e.eid], ('power', 'P') )
     connect_randomly(world, pvs, [e for e in grid if 'node' in e.eid], 'P')
-
+    world.connect(activity, appliances, 'active_occupancy')
+    world.connect(activity, ligthing, 'active_occupancy')
+    world.connect(irradiance, ligthing, 'irradiance')
     # Database
     db = world.start('DB', step_size=60, duration=END)
     hdf5 = db.Database(filename='demo.hdf5')
-    connect_many_to_one(world, houses, hdf5, 'P_out')
+    connect_many_to_one(world, appliances.children, hdf5, 'power')
     connect_many_to_one(world, pvs, hdf5, 'P')
 
     nodes = [e for e in grid if e.type in ('RefBus, PQBus')]
@@ -72,7 +107,7 @@ def create_scenario(world):
 
     # Web visualization
     webvis = world.start('WebVis', start_date=START, step_size=60)
-    webvis.set_config(ignore_types=['Topology', 'ResidentialLoads', 'Grid',
+    webvis.set_config(ignore_types=['Topology', 'HouseholdsGroup', 'Grid',
                                     'Database'])
     vis_topo = webvis.Topology()
 
@@ -96,11 +131,33 @@ def create_scenario(world):
         },
     })
 
-    connect_many_to_one(world, houses, vis_topo, 'P_out')
+    connect_many_to_one(world, activity.children, vis_topo, 'active_occupancy')
     webvis.set_etypes({
-        'House': {
+        'HouseholdActivity': {
+            'cls': 'act',
+            'attr': 'active_occupancy',
+            'unit': 'AO [-]',
+            'default': 0,
+            'min': 0,
+            'max': 10,
+        },
+    })
+    connect_many_to_one(world, ligthing.children, vis_topo, 'power')
+    webvis.set_etypes({
+        'HouseholdLighting': {
             'cls': 'load',
-            'attr': 'P_out',
+            'attr': 'power',
+            'unit': 'P [W]',
+            'default': 0,
+            'min': 0,
+            'max': 1000,
+        },
+    })
+    connect_many_to_one(world, appliances.children, vis_topo, 'power')
+    webvis.set_etypes({
+        'HouseholdAppliances': {
+            'cls': 'load',
+            'attr': 'power',
             'unit': 'P [W]',
             'default': 0,
             'min': 0,
@@ -124,12 +181,16 @@ def create_scenario(world):
 def connect_buildings_to_grid(world, houses, grid):
     buses = filter(lambda e: e.type == 'PQBus', grid)
     buses = {b.eid.split('-')[1]: b for b in buses}
-    house_data = world.get_data(houses, 'node_id')
+    #house_data = world.get_data(houses, 'node_id')
     for house in houses:
-        node_id = house_data[house]['node_id']
-        #print(buses.keys())
+        # node_id = house_data[house]['node_id']
+        # print(buses.keys())
+        #dict_keys(['node_a1', 'node_a2', 'node_a3', 'node_b1', 'node_b10', 'node_b2', 'node_b3', 'node_b4', 'node_b5', 'node_b6', 'node_b7', 'node_b8', 'node_b9', 'node_c1', 'node_c10', 'node_c11', 'node_c12', 'node_c2', 'node_c3', 'node_c4', 'node_c5', 'node_c6', 'node_c7', 'node_c8', 'node_c9', 'node_d1', 'node_d10', 'node_d11', 'node_d12', 'node_d2', 'node_d3', 'node_d4', 'node_d5', 'node_d6', 'node_d7', 'node_d8', 'node_d9', 'tr_sec'])
+        #node_b7  on bus  Entity('PyPower-0', '0-node_b7', 'PyPower', PQBus)
+
         #print(node_id,' on bus ', buses[node_id] )
-        world.connect(house, buses[node_id], ('P_out', 'P'))
+        world.connect(house, buses['node_a1'], ('P_out', 'P'))
+
 
 
 if __name__ == '__main__':
