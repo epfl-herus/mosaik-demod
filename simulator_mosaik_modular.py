@@ -1,5 +1,7 @@
-"""
-Mosaik interface for the example simulator.
+"""Mosaik Simulators adaptation example.
+
+It is possible to adapt any class from demod into mosaik
+using the structure shown in this file.
 
 """
 from demod_mosaik_adaptors import (
