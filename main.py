@@ -14,8 +14,8 @@ SIM_CONFIG = {
     'LoadSimulator2':{
         'cmd': '%(python)s simulator_mosaik.py %(addr)s'
     },
-    'ActivitySimulator': {
-        'python': 'simulator_mosaik_modular:ActivitySimulator',
+    'OccupancySimulator': {
+        'python': 'simulator_mosaik_modular:OccupancySimulator',
     },
     'ApplianceSimulator':{
         'python': 'simulator_mosaik_modular:AppliancesSimulator',
@@ -37,7 +37,7 @@ examplesim = world.start('LoadSimulator')
 
 collector = world.start('Collector', step_size=10*60) # every 10 minutes
 load_sim = world.start('LoadSimulator2')
-activity_sim = world.start('ActivitySimulator')
+activity_sim = world.start('OccupancySimulator')
 app_sim = world.start('ApplianceSimulator')
 ligth_sim = world.start('LightingSimulator')
 irradiance_sim = world.start('IrradianceSimulator')
