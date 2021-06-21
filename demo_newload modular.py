@@ -13,8 +13,8 @@ sim_config = {
     'DB': {
         'cmd': 'mosaik-hdf5 %(addr)s',
     },
-    'ActivitySimulator': {
-        'python': 'simulator_mosaik_modular:ActivitySimulator',
+    'OccupancySimulator': {
+        'python': 'simulator_mosaik_modular:OccupancySimulator',
     },
     'ApplianceSimulator':{
         'python': 'simulator_mosaik_modular:AppliancesSimulator',
@@ -35,6 +35,7 @@ sim_config = {
 }
 
 START = '2014-01-01 00:00:00'
+START_DATETIME = datetime.datetime.strptime(START, "%Y-%m-%d %H:%M:%S")
 END = 31 * 24 * 3600  # 1 day
 PV_DATA = 'data/pv_10kw.csv'
 PROFILE_FILE = 'data/profiles.data.gz'
@@ -57,7 +58,7 @@ def create_scenario(world):
     appsim = world.start('ApplianceSimulator')
     lightsim = world.start('LightingSimulator')
     irrsim = world.start('IrradianceSimulator')
-    actsim = world.start('ActivitySimulator')
+    actsim = world.start('OccupancySimulator')
 
     pvsim = world.start('CSV', sim_start=START, datafile=PV_DATA)
 
@@ -66,17 +67,23 @@ def create_scenario(world):
     grid = pypower.Grid(gridfile=GRID_FILE).children
     activity = actsim.HouseholdsGroupActivity(
         inputs_params={
-            'n_households': n_households, 'day_type': 'd'
-        })
+            'n_households': n_households,
+            'start_datetime': START_DATETIME
+        }
+    )
     appliances = appsim.HouseholdsGroupAppliances(
         inputs_params={
-            'subgroup_kwargs_list': [{'n_residents': 2}],
-            'n_hh_list': [n_households]
+            'subgroup_list': [{'n_residents': 2}],
+            'n_households_list': [n_households],
+            'start_datetime': START_DATETIME
         }
     )
     ligthing = lightsim.HouseholdsGroupLighting(inputs_params={'n_households': n_households,})
-    irradiance = irrsim.Irradiance(inputs_params={'longitude':32.1, 'latitude':21.3, 'meridian':17.4,
-            'date_time': datetime.datetime.now(),})
+    irradiance = irrsim.Irradiance(
+        inputs_params={
+            'start_datetime': START_DATETIME,
+        }
+    )
     pvs = pvsim.PV.create(20)
 
     # Connect entities
@@ -129,7 +136,7 @@ def create_scenario(world):
         'HouseholdActivity': {
             'cls': 'act',
             'attr': 'active_occupancy',
-            'unit': 'Active Occupants',
+            'unit': 'AO [-]',
             'default': 0,
             'min': 0,
             'max': 10,
@@ -179,8 +186,8 @@ def connect_buildings_to_grid(world, houses, grid):
         # node_id = house_data[house]['node_id']
         # print(buses.keys())
         #dict_keys(['node_a1', 'node_a2', 'node_a3', 'node_b1', 'node_b10', 'node_b2', 'node_b3', 'node_b4', 'node_b5', 'node_b6', 'node_b7', 'node_b8', 'node_b9', 'node_c1', 'node_c10', 'node_c11', 'node_c12', 'node_c2', 'node_c3', 'node_c4', 'node_c5', 'node_c6', 'node_c7', 'node_c8', 'node_c9', 'node_d1', 'node_d10', 'node_d11', 'node_d12', 'node_d2', 'node_d3', 'node_d4', 'node_d5', 'node_d6', 'node_d7', 'node_d8', 'node_d9', 'tr_sec'])
-        #node_b7  on bus  Entity('PyPower-0', '0-node_b7', 'PyPower', PQBus) 
-        
+        #node_b7  on bus  Entity('PyPower-0', '0-node_b7', 'PyPower', PQBus)
+
         #print(node_id,' on bus ', buses[node_id] )
         world.connect(house, buses['node_a1'], ('P_out', 'P'))
 
