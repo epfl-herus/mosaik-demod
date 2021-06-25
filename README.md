@@ -3,6 +3,8 @@
 This repository contains adapter classes for all
 demod classes into mosaik.
 
+This works with mosaik versions 2 and 3.
+
 ### demod
 
 Demod is a Python library for assembling bottom-up domestic energy demand models.
