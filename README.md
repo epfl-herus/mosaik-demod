@@ -31,24 +31,24 @@ If the demod simulator simulates various households,
 use the Household module.
 For a single value simulated (ex. climate), use The SingleValue module.
 
-```
+```python
 from mosaikdemod.adaptors import AbstractHouseholdsModule
 from mosaikdemod.adaptors import AbstractSingleValueModule
 ```
 
 2. import demod library
-```
+```python
 import demod
 ```
 
 3. Inherit from the abstract module
 
-```
+```python
 class ComponentSimulator(AbstractHouseholdsModule):
 ```
 
 4. Specify the attributes of the simulator that can be accessed
-```
+```python
     attributes_dict = {
         'attr_name_in_mosaik': 'get_demod_getter',
         'other__attr': 'get_smth_else',
@@ -56,7 +56,7 @@ class ComponentSimulator(AbstractHouseholdsModule):
     }
 ```
 5. Specify the inputs of the simulator that can be accessed
-```
+```python
     step_inputs_dict = {
         'attr_name_in_mosaik': 'step_input_demod',
         'other_input': 'input_other',
@@ -64,7 +64,7 @@ class ComponentSimulator(AbstractHouseholdsModule):
     }
 ```
 6. Override the `__init__()` method
-```
+```python
     def __init__(
         self,
         simulated_component='CompName',  # Name of what is simulated used for mosaik instances
@@ -76,7 +76,7 @@ class ComponentSimulator(AbstractHouseholdsModule):
 
 7. Import your simulator to your mosaik scenario script.
 
-```
+```python
 # Define the Simulator
 sim_config = {
     ...
@@ -110,7 +110,7 @@ component = actsim.CompName(
 8. Connect the simulators. You can connect a whole household group to another one if you use 2 demod components.
 Or you can also connect all the households individually
 by calling the children method
-```
+```python
 # Connect 2 demod components
 # comp1 passes attr to comp2
 world.connect(component1, component2, 'attr_name_in_mosaik')
