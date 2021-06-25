@@ -1,3 +1,5 @@
+"""Adaptors for moasik."""
+
 import mosaik_api
 
 import numpy as np
