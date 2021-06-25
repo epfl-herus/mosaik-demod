@@ -2,9 +2,8 @@
 
 It is possible to adapt any class from demod into mosaik
 using the structure shown in this file.
-
 """
-from demod_mosaik_adaptors import (
+from mosaikdemod.adaptors import (
     AbstractHouseholdsModule, AbstractSingleValueModule
 )
 
@@ -42,7 +41,8 @@ class AppliancesSimulator(AbstractHouseholdsModule):
         self,
         simulated_component='Appliances',
         demod_simulator_class=demod.simulators.appliance_simulators.SubgroupApplianceSimulator,
-        step_size=60):  # minute step size
+        step_size=60  # minute step size
+    ):
         super().__init__(simulated_component, demod_simulator_class, step_size)
 
 
@@ -58,7 +58,8 @@ class LightingSimulator(AbstractHouseholdsModule):
         self,
         simulated_component='Lighting',
         demod_simulator_class=demod.simulators.lighting_simulators.CrestLightingSimulator,
-        step_size=60):  # minute step size
+        step_size=60  # minute step size
+    ):
         super().__init__(simulated_component, demod_simulator_class, step_size)
 
 class IrradianceSimulator(AbstractSingleValueModule):
@@ -71,5 +72,6 @@ class IrradianceSimulator(AbstractSingleValueModule):
         self,
         simulated_component='Irradiance',
         default_simulator=demod.simulators.weather_simulators.CrestIrradianceSimulator,
-        step_size=60):  # minute step size
+        step_size=60  # minute step size
+    ):
         super().__init__(simulated_component, default_simulator, step_size)
