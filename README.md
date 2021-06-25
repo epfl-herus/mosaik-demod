@@ -19,7 +19,7 @@ to perform a coordinated simulation of a given (Smart Grid) scenario.
 
 ## Usage
 
-demo.py show usage example inside a simulation.
+demo.py show usage example inside a mosaik simulation script.
 
 ## Adapting a new simulator
 
@@ -124,5 +124,8 @@ world.connect(component.children[42], other_mosaik_comp, 'attr_name_in_mosaik')
 
 ```
 
-The new load simulator integrated to mosaik is in simulator_mosaik.py
+## Examples
+
+Some examples can be found in simulator_mosaik_modular.py.
+
 
