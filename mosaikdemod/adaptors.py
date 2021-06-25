@@ -3,8 +3,10 @@ import mosaik_api
 import numpy as np
 
 META_ABSTRACT = {
+    'type': 'time-based',  # Demod simulators are all time-based
     'models': {},
 }
+
 
 class AbstractHouseholdsModule(mosaik_api.Simulator):
     """Abstract adaptor class for linking demod simulators to mosaik.
@@ -83,11 +85,6 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
         meta = self._generate_meta()
         super().__init__(meta)
 
-    def init(self, sid, eid_prefix=None):
-        if eid_prefix is not None:
-            self.eid_prefix = eid_prefix
-        return self.meta
-
     def create(
         self,
         num, model,
@@ -142,9 +139,8 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
 
         return [entity]
 
-    def step(self, time, inputs=None):
+    def step(self, time, inputs=None, max_advance=None):
         # Assume time is in seconds
-
         # Perform simple simulation step
         if inputs is None:
             [sim.step() for sim in self.simulators]
@@ -214,6 +210,7 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
                 data[eid][attr] = out
         return data
 
+
 class AbstractSingleValueModule(mosaik_api.Simulator):
     """Abstract adaptor class for linking demod simulators to mosaik.
 
@@ -277,11 +274,6 @@ class AbstractSingleValueModule(mosaik_api.Simulator):
         meta = self._generate_meta()
         super().__init__(meta)
 
-    def init(self, sid, eid_prefix=None):
-        if eid_prefix is not None:
-            self.eid_prefix = eid_prefix
-        return self.meta
-
     def create(
         self,
         num, model,
@@ -324,7 +316,7 @@ class AbstractSingleValueModule(mosaik_api.Simulator):
 
         return [entity]
 
-    def step(self, time, inputs=None):
+    def step(self, time, inputs=None, max_advance=None):
         # Assume time is in seconds
 
         # Perform simple simulation step

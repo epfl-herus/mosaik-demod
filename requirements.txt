@@ -1,2 +1,2 @@
-mosaik<3
+mosaik
 demod
