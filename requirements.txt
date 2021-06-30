@@ -5,4 +5,4 @@ mosaik-hdf5==0.4
 mosaik-pypower==0.8.0
 mosaik-web==0.3.0
 networkx==2.5
-demod==0.2-2
+demod==0.2
