@@ -1,0 +1,8 @@
+mosaik
+mosaik-api
+mosaik-csv
+mosaik-hdf5
+mosaik-pypower
+mosaik-web
+networkx
+demod

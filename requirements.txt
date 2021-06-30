@@ -1,9 +1,8 @@
 mosaik==3.0.0
 mosaik-api==3.0
-mosaik-csv==1.0.4
-mosaik-hdf5==0.3
-mosaik-pypower==0.7.3
-mosaik-web==0.2.2
+mosaik-csv==1.2
+mosaik-hdf5==0.4
+mosaik-pypower==0.8.0
+mosaik-web==0.3.0
 networkx==2.5
-demod==0.1-4
-
+demod==0.2-2
