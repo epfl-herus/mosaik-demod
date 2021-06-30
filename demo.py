@@ -4,6 +4,8 @@ import datetime
 from mosaik.util import connect_randomly, connect_many_to_one
 import mosaik
 
+from demod.datasets.CREST.loader import Crest
+
 
 
 sim_config = {
@@ -42,6 +44,9 @@ PROFILE_FILE = 'data/profiles.data.gz'
 GRID_NAME = 'demo_lv_grid'
 GRID_FILE = 'data/%s.json' % GRID_NAME
 
+# Choose the dataset used by demod
+demod_data = Crest()
+
 
 def main():
     random.seed(23)
@@ -68,20 +73,26 @@ def create_scenario(world):
     activity = actsim.HouseholdsGroupActivity(
         inputs_params={
             'n_households': n_households,
-            'start_datetime': START_DATETIME
+            'start_datetime': START_DATETIME,
+            'data': demod_data,
         }
     )
     appliances = appsim.HouseholdsGroupAppliances(
         inputs_params={
-            'subgroup_list': [{'n_residents': 2}],
+            'subgroups_list': [{'n_residents': 2}],
             'n_households_list': [n_households],
-            'start_datetime': START_DATETIME
+            'start_datetime': START_DATETIME,
+            'data': demod_data
         }
     )
-    ligthing = lightsim.HouseholdsGroupLighting(inputs_params={'n_households': n_households,})
+    ligthing = lightsim.HouseholdsGroupLighting(inputs_params={
+        'n_households': n_households,
+        'data': demod_data
+    })
     irradiance = irrsim.Irradiance(
         inputs_params={
             'start_datetime': START_DATETIME,
+            'data': demod_data,
         }
     )
     pvs = pvsim.PV.create(20)
