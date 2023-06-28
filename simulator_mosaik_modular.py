@@ -7,6 +7,10 @@ from mosaikdemod.adaptors import (
     AbstractHouseholdsModule, AbstractSingleValueModule
 )
 
+import sys
+# insert at 1, 0 is the script path (or '' in REPL)
+sys.path.insert(1, r'C:\Users\barsanti.INTRANET\Desktop\PhD\3_CODEs\demod-private-Matteo')
+
 from demod.simulators.crest_simulators import Crest4StatesModel
 from demod.simulators.appliance_simulators import SubgroupApplianceSimulator
 from demod.simulators.lighting_simulators import CrestLightingSimulator

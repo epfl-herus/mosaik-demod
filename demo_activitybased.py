@@ -9,7 +9,7 @@ import sys
 sys.path.insert(1, r'C:\Users\barsanti.INTRANET\Desktop\PhD\3_CODEs\demod-private-Matteo')
 
 from demod.datasets.CREST.loader import Crest
-
+from demod.datasets.Germany.loader import GermanDataHerus
 
 
 sim_config = {
@@ -19,17 +19,11 @@ sim_config = {
     'DB': {
         'cmd': 'mosaik-hdf5 %(addr)s',
     },
-    'OccupancySimulator': {
-        'python': 'simulator_mosaik_modular:OccupancySimulator',
-    },
-    'ApplianceSimulator':{
-        'python': 'simulator_mosaik_modular:AppliancesSimulator',
-    },
-    'LightingSimulator':{
-        'python': 'simulator_mosaik_modular:LightingSimulator',
+    'LoadSimulator': {
+        'python': 'simulator_mosaik_modular_activitybased:LoadSimulator',
     },
     'IrradianceSimulator':{
-        'python': 'simulator_mosaik_modular:IrradianceSimulator',
+        'python': 'simulator_mosaik_modular_activitybased:IrradianceSimulator',
     },
     'PyPower': {
         'python': 'mosaik_pypower.mosaik:PyPower',
@@ -49,7 +43,17 @@ GRID_NAME = 'demo_lv_grid'
 GRID_FILE = 'data/%s.json' % GRID_NAME
 
 # Choose the dataset used by demod
-demod_data = Crest()
+demod_data = GermanDataHerus(version='vBottaccioli')
+crest_data = Crest()
+
+# scenario data
+n_households = 40
+hh_subgroups = [{
+    'n_residents': 5,
+    'household_type': 4, 
+}]
+n_hh_list = [n_households]
+
 
 
 def main():
@@ -64,53 +68,40 @@ def create_scenario(world):
     # Start simulators
     pypower = world.start('PyPower', step_size=15*60)
 
-    appsim = world.start('ApplianceSimulator')
-    lightsim = world.start('LightingSimulator')
+    loadsim = world.start('LoadSimulator')
     irrsim = world.start('IrradianceSimulator')
-    actsim = world.start('OccupancySimulator')
 
     pvsim = world.start('CSV', sim_start=START, datafile=PV_DATA)
 
-    n_households = 40
     # Instantiate models
     grid = pypower.Grid(gridfile=GRID_FILE).children
-    activity = actsim.HouseholdsGroupActivity(
+    
+    load = loadsim.HouseholdsGroupLoad(
         inputs_params={
-            'n_households': n_households,
+            'subgroups_list':hh_subgroups,
+            'n_households_list':n_hh_list,
             'start_datetime': START_DATETIME,
             'data': demod_data,
         }
     )
-    appliances = appsim.HouseholdsGroupAppliances(
-        inputs_params={
-            'subgroups_list': [{'n_residents': 2}],
-            'n_households_list': [n_households],
-            'start_datetime': START_DATETIME,
-            'data': demod_data
-        }
-    )
-    ligthing = lightsim.HouseholdsGroupLighting(inputs_params={
-        'n_households': n_households,
-        'data': demod_data
-    })
+    
     irradiance = irrsim.Irradiance(
         inputs_params={
             'start_datetime': START_DATETIME,
-            'data': demod_data,
+            'data': crest_data,
         }
     )
     pvs = pvsim.PV.create(20)
 
     # Connect entities
-    connect_randomly(world, appliances.children, [e for e in grid if 'node' in e.eid], ('power', 'P') )
     connect_randomly(world, pvs, [e for e in grid if 'node' in e.eid], 'P')
-    world.connect(activity, appliances, 'active_occupancy')
-    world.connect(activity, ligthing, 'active_occupancy')
-    world.connect(irradiance, ligthing, 'irradiance')
+    connect_randomly(world, load.children, [e for e in grid if 'node' in e.eid], ('power', 'P') )
+    # connect_randomly(world, load.children, [e for e in grid if 'node' in e.eid], 'power')
+    
     # Database
     db = world.start('DB', step_size=60, duration=END)
     hdf5 = db.Database(filename='demo.hdf5')
-    connect_many_to_one(world, appliances.children, hdf5, 'power')
+    # connect_many_to_one(world, appliances.children, hdf5, 'power')
     connect_many_to_one(world, pvs, hdf5, 'P')
 
     nodes = [e for e in grid if e.type in ('RefBus, PQBus')]
@@ -146,7 +137,7 @@ def create_scenario(world):
         },
     })
 
-    connect_many_to_one(world, activity.children, vis_topo, 'active_occupancy')
+    connect_many_to_one(world, load.children, vis_topo, 'active_occupancy')
     webvis.set_etypes({
         'HouseholdActivity': {
             'cls': 'act',
@@ -157,7 +148,7 @@ def create_scenario(world):
             'max': 10,
         },
     })
-    connect_many_to_one(world, ligthing.children, vis_topo, 'power')
+    connect_many_to_one(world, load.children, vis_topo, 'power')
     webvis.set_etypes({
         'HouseholdLighting': {
             'cls': 'load',
@@ -166,17 +157,6 @@ def create_scenario(world):
             'default': 0,
             'min': 0,
             'max': 1000,
-        },
-    })
-    connect_many_to_one(world, appliances.children, vis_topo, 'power')
-    webvis.set_etypes({
-        'HouseholdAppliances': {
-            'cls': 'load',
-            'attr': 'power',
-            'unit': 'P [W]',
-            'default': 0,
-            'min': 0,
-            'max': 3000,
         },
     })
 

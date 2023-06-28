@@ -5,6 +5,7 @@ import mosaik_api
 import numpy as np
 
 META_ABSTRACT = {
+    'api_version': '2.4',
     'type': 'time-based',  # Demod simulators are all time-based
     'models': {},
 }
@@ -69,6 +70,7 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
         Args:
             simulated_component (str): The  name of the simulated component.
         """
+        
         # empty list to store the simulators corresponding to the entities
         self.simulators = []
         # entity id
@@ -84,9 +86,30 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
         # Step size of the simulator
         self.step_size = step_size
 
-        meta = self._generate_meta()
-        super().__init__(meta)
+        ## special stuff for letting demod sleep.
+        self.special_next_start_time = None
+        self.special_stop_time = None
+        
+        # meta = self._generate_meta()
+        # super().__init__(meta)
+        
+        
+    def init(self, sid, attributes_dict, step_inputs_dict):
+        """Mosaik method for additional initialization tasks
 
+        Args:
+            attributes_dict (dict): attributes of the simulators.
+            step_inputs_dict (dict): inputs for running the step function.
+        """
+        self.attributes_dict = attributes_dict
+        self.step_inputs_dict = step_inputs_dict
+        
+        self.meta = self._generate_meta()
+        if 'demod_run_times' in self.step_inputs_dict.keys():
+            self.step_inputs_dict.pop('demod_run_times')
+        return self.meta
+
+        
     def create(
         self,
         num, model,
@@ -157,6 +180,13 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
 
 
             for eid, attrs in inputs.items():
+                ## need to use demod_run_times and delete it afterwards from inputs.
+                if 'demod_run_times' in attrs:
+                    time_vals = list(attrs['demod_run_times'].values())[0]
+                    if time_vals['stop_time'] > time:
+                        self.special_stop_time = time_vals['stop_time']
+                        self.special_next_start_time = time_vals['next_start_time']
+                    attrs.pop('demod_run_times')
                 for name, values in attrs.items():
                     # values are list for the whole household, use them directly
                     if len(values) > 1:
@@ -176,17 +206,22 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
                         else:
                             raise ValueError('%s not registered in %s' % (eid, str(self)))
 
-            # unpacks the inputs for the simulators step function
-            # print(inputs_list)
-            # print(type(inputs_list))
-            [sim.step(**i) for sim, i in zip(self.simulators, inputs_list)]
+            if self.special_stop_time is None or (
+                    self.special_stop_time and time <= self.special_stop_time):
+                # unpacks the inputs for the simulators step function
+                [sim.step(**i) for sim, i in zip(self.simulators, inputs_list)]
+            elif self.special_stop_time is not None and time > self.special_stop_time:
+                tmp_next_start_time = self.special_next_start_time
+                self.special_stop_time = None
+                self.special_next_start_time = None
+                return tmp_next_start_time
 
         return time + self.step_size  # Step size
 
     def get_data(self, outputs):
         data = {}  # stores the data for the output
-        # TODO imporove the implementation of this, to perform less calls uusing method()
-        for eid, attrs in outputs.items():
+        # TODO improve the implementation of this, to perform less calls using method()
+        for eid, attrs in outputs.items(): 
             data[eid] = {}
             # check if accessing data for a group or a household
             if eid in self.entities:
@@ -196,6 +231,7 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
                 sim_id, hh_id = self.children[eid]
             else:
                 raise ValueError('%s not registered in %s' % (eid, str(self)))
+            
 
             for attr in attrs:
                 if (attr not in self.meta['models'][self.eid_prefix]['attrs']) and (attr not in self.meta['models'][self.eid_prefix]['attrs']):
