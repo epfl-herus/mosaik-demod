@@ -5,7 +5,7 @@ import mosaik_api
 import numpy as np
 
 META_ABSTRACT = {
-    'api_version': '2.4',
+    'api_version': '3.0',
     'type': 'time-based',  # Demod simulators are all time-based
     'models': {},
 }
