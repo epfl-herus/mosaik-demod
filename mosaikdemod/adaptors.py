@@ -5,7 +5,6 @@ import mosaik_api
 import numpy as np
 
 META_ABSTRACT = {
-    'api_version': '3.0',
     'type': 'time-based',  # Demod simulators are all time-based
     'models': {},
 }
@@ -41,28 +40,24 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
 
     def _generate_meta(self):
         """Generate the meta file of the simulator."""
-        # copy the meta abstract file
-        meta = META_ABSTRACT.copy()
         # add models that the simulator should create
-        meta['models'][self.eid_prefix] = {}
-        meta['models'][self.cid_prefix] = {}
+        self.meta['models'][self.eid_prefix] = {}
+        self.meta['models'][self.cid_prefix] = {}
         # makes the group public and the child private
-        meta['models'][self.eid_prefix]['public'] = True
-        meta['models'][self.cid_prefix]['public'] = False
+        self.meta['models'][self.eid_prefix]['public'] = True
+        self.meta['models'][self.cid_prefix]['public'] = False
         # set the parameters of creation for the mosaik entities
-        meta['models'][self.eid_prefix]['params'] = ['inputs_params']
-        meta['models'][self.cid_prefix]['params'] = []
+        self.meta['models'][self.eid_prefix]['params'] = ['inputs_params']
+        self.meta['models'][self.cid_prefix]['params'] = []
         # give them the attributes corresponding to the type of simulator
-        meta['models'][self.eid_prefix]['attrs'] = (
+        self.meta['models'][self.eid_prefix]['attrs'] = (
             list(self.attributes_dict.keys())
             + list(self.step_inputs_dict.keys())
         )
-        meta['models'][self.cid_prefix]['attrs'] = (
+        self.meta['models'][self.cid_prefix]['attrs'] = (
             list(self.attributes_dict.keys())
             + list(self.step_inputs_dict.keys())
         )
-
-        return meta
 
     def __init__(self, simulated_component, demod_simulator_class, step_size):
         """Create a mosaik simulator object.
@@ -70,7 +65,7 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
         Args:
             simulated_component (str): The  name of the simulated component.
         """
-        
+        super().__init__(META_ABSTRACT)        
         # empty list to store the simulators corresponding to the entities
         self.simulators = []
         # entity id
@@ -90,9 +85,6 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
         self.special_next_start_time = None
         self.special_stop_time = None
         
-        # meta = self._generate_meta()
-        # super().__init__(meta)
-        
         
     def init(self, sid, attributes_dict, step_inputs_dict):
         """Mosaik method for additional initialization tasks
@@ -104,7 +96,7 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
         self.attributes_dict = attributes_dict
         self.step_inputs_dict = step_inputs_dict
         
-        self.meta = self._generate_meta()
+        self._generate_meta()
         if 'demod_run_times' in self.step_inputs_dict.keys():
             self.step_inputs_dict.pop('demod_run_times')
         return self.meta
