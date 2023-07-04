@@ -8,6 +8,7 @@ META_ABSTRACT = {
     'api_version': '3.0',
     'type': 'time-based',  # Demod simulators are all time-based
     'models': {},
+    # 'extra_methods': ["test"]
 }
 
 
@@ -38,6 +39,9 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
 
     attributes_dict = {}
     step_inputs_dict = {}
+    
+    # def test(self):
+    #     return 42
 
     def _generate_meta(self):
         """Generate the meta file of the simulator."""
@@ -239,9 +243,12 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
                 elif attr in self.attributes_dict: # check if the attribute has a corresponding getter method
                     method = getattr(self.simulators[sim_id], self.attributes_dict[attr])
                     if hh_id == None:
-                        out = [ int(i) for i in method() ]
+                        if isinstance(method(), list) or isinstance(method(), np.ndarray):
+                            out = [ int(i) for i in method() ] 
+                        else:
+                            out = method()
                     else:
-                        out = int(method()[hh_id])
+                        out = int(method()[hh_id]) 
                 else:
                     raise NotImplementedError('No implementation corresponds to output attribute: %s' % attr)
                 # set the value to the out data
