@@ -197,8 +197,20 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
                             inputs_list[sim_id][inputs_dic[name]] = np.array(val)
                         elif eid in self.children:
                             sim_id, hh_id = self.children[eid]
-                            # reconstruut the arrays
-                            inputs_list[sim_id][inputs_dic[name]][hh_id] = val
+                            # reconstruct 1D or 2D inputs arrays 
+                            if isinstance(val, list) or isinstance(val, np.ndarray): 
+                                # if list or array reconstruct a 2D array
+                                if list(inputs).index(eid) == 0:
+                                    # convert to list
+                                    inputs_list[sim_id][inputs_dic[name]] = list(inputs_list[sim_id][inputs_dic[name]])                                
+                                inputs_list[sim_id][inputs_dic[name]][hh_id] = val
+                                if list(inputs).index(eid) == len(inputs) - 1:
+                                    # convert back to array
+                                    inputs_list[sim_id][inputs_dic[name]] = np.asarray(inputs_list[sim_id][inputs_dic[name]])
+                            else:
+                                # if single values simply reconstruct the 1D array
+                                inputs_list[sim_id][inputs_dic[name]][hh_id] = val
+                                
                         else:
                             raise ValueError('%s not registered in %s' % (eid, str(self)))
 
