@@ -201,11 +201,11 @@ class AbstractHouseholdsModule(mosaik_api.Simulator):
                             if isinstance(val, list) or isinstance(val, np.ndarray): 
                                 # if list or array reconstruct a 2D array
                                 if list(inputs).index(eid) == 0:
-                                    # convert to list
+                                    # first iteration convert input to list
                                     inputs_list[sim_id][inputs_dic[name]] = list(inputs_list[sim_id][inputs_dic[name]])                                
                                 inputs_list[sim_id][inputs_dic[name]][hh_id] = val
                                 if list(inputs).index(eid) == len(inputs) - 1:
-                                    # convert back to array
+                                    # last iteration convert input list back to array
                                     inputs_list[sim_id][inputs_dic[name]] = np.asarray(inputs_list[sim_id][inputs_dic[name]])
                             else:
                                 # if single values simply reconstruct the 1D array
